@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLanguage } from "./LanguageProvider";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -21,7 +22,7 @@ const plans = [
       "Core performance and SEO setup",
       "Domain + hosting setup",
       "1 round of revisions",
-      "Delivery in 5–7 days",
+      "Delivery in 5â€“7 days",
     ],
     cta: "Get Started",
     popular: false,
@@ -51,7 +52,7 @@ const plans = [
     label: "Enterprise",
     price: "Let's talk",
     period: "custom scope",
-    description: "Complex products, unique requirements, or long-term partnerships — let's figure it out together.",
+    description: "Complex products, unique requirements, or long-term partnerships â€” let's figure it out together.",
     accent: "#f59e0b",
     accentMuted: "rgba(245,158,11,0.10)",
     accentBorder: "rgba(245,158,11,0.20)",
@@ -99,6 +100,55 @@ function RevealText({
 }
 
 export default function Pricing() {
+  const { locale } = useLanguage();
+  const isID = locale === "id";
+  const plansID = [
+    {
+      name: "Starter",
+      label: "Landing Page",
+      period: "sekali bayar",
+      description: "Cocok untuk personal brand atau bisnis kecil yang butuh website cepat dan rapi.",
+      features: [
+        "Landing page atau website scope kecil",
+        "Implementasi front-end responsif",
+        "Setup performa dan SEO dasar",
+        "Setup domain + hosting",
+        "1x revisi",
+        "Selesai dalam 5-7 hari",
+      ],
+      cta: "Mulai",
+    },
+    {
+      name: "Premium",
+      label: "Full Stack",
+      period: "per minggu",
+      description: "Untuk tim yang butuh pengembangan produk lengkap dengan backend, API, dan arsitektur scalable.",
+      features: [
+        "Arsitektur front-end multi halaman",
+        "Implementasi backend, API, dan database",
+        "Optimasi performa dan deployment",
+        "Integrasi auth, CMS, atau dashboard",
+        "Revisi tanpa batas selama sprint",
+        "Priority support & weekly updates",
+      ],
+      cta: "Mulai Proyek",
+    },
+    {
+      name: "Custom",
+      label: "Enterprise",
+      period: "scope custom",
+      description: "Untuk kebutuhan kompleks, requirement khusus, atau kerja sama jangka panjang.",
+      features: [
+        "Discovery dan scoping mendalam",
+        "Arsitektur dan stack custom",
+        "Sprint pengembangan dedicated",
+        "Integrasi third-party",
+        "Maintenance & support berkelanjutan",
+        "Skema billing dan timeline fleksibel",
+      ],
+      cta: "Hubungi Saya",
+    },
+  ];
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [hovered, setHovered] = useState<number | null>(null);
@@ -107,7 +157,7 @@ export default function Pricing() {
     <section id="pricing" ref={sectionRef} className="relative px-6 pt-32 pb-32">
       <div className="max-w-5xl mx-auto w-full">
 
-        {/* ── Label ── */}
+        {/* â”€â”€ Label â”€â”€ */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -117,7 +167,7 @@ export default function Pricing() {
         >
         </motion.p>
 
-        {/* ── Heading ── */}
+        {/* â”€â”€ Heading â”€â”€ */}
         <div className="mb-16">
           <RevealText delay={0.1}>
             <span
@@ -135,12 +185,12 @@ export default function Pricing() {
               >
                 transparent
               </em>{" "}
-              pricing.
+              {isID ? "untuk kamu." : "pricing."}
             </span>
           </RevealText>
         </div>
 
-        {/* ── Cards Grid ── */}
+        {/* â”€â”€ Cards Grid â”€â”€ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {plans.map((plan, i) => (
             <motion.div
@@ -158,7 +208,7 @@ export default function Pricing() {
                   className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase text-white"
                   style={{ background: plan.accent }}
                 >
-                  Most Popular
+                  {isID ? "Paling Populer" : "Most Popular"}
                 </div>
               )}
 
@@ -210,7 +260,7 @@ export default function Pricing() {
                         color: plan.accent,
                       }}
                     >
-                      {plan.label}
+                      {isID ? plansID[i].label : plan.label}
                     </span>
                   </div>
 
@@ -231,7 +281,7 @@ export default function Pricing() {
                         className="text-sm ml-2"
                         style={{ color: "var(--text-muted)" }}
                       >
-                        / {plan.period}
+                        / {isID ? plansID[i].period : plan.period}
                       </span>
                     )}
                   </div>
@@ -241,7 +291,7 @@ export default function Pricing() {
                     className="text-lg font-bold mb-3"
                     style={{ color: plan.accent }}
                   >
-                    {plan.name}
+                    {isID ? plansID[i].name : plan.name}
                   </p>
 
                   {/* Description */}
@@ -249,7 +299,7 @@ export default function Pricing() {
                     className="text-sm leading-relaxed mb-6"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    {plan.description}
+                    {isID ? plansID[i].description : plan.description}
                   </p>
 
                   {/* Divider */}
@@ -260,7 +310,7 @@ export default function Pricing() {
 
                   {/* Features */}
                   <ul className="flex flex-col gap-3 mb-8 flex-1">
-                    {plan.features.map((f) => (
+                    {(isID ? plansID[i].features : plan.features).map((f) => (
                       <li key={f} className="flex items-start gap-3">
                         <div
                           className="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
@@ -311,7 +361,7 @@ export default function Pricing() {
                       }
                     }}
                   >
-                    {plan.cta}
+                    {isID ? plansID[i].cta : plan.cta}
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M7 17L17 7M17 7H7M17 7v10" />
                     </svg>
@@ -322,7 +372,7 @@ export default function Pricing() {
           ))}
         </div>
 
-        {/* ── Bottom note ── */}
+        {/* â”€â”€ Bottom note â”€â”€ */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
@@ -330,7 +380,7 @@ export default function Pricing() {
           className="text-center text-xs mt-10"
           style={{ color: "var(--text-subtle)" }}
         >
-          All prices in USD · Need something in between?{" "}
+          {isID ? "Semua harga dalam USD · Butuh paket tengah?" : "All prices in USD · Need something in between?"}{" "}
           <a
             href="#contact"
             className="underline underline-offset-4 transition-colors duration-200"
@@ -338,7 +388,7 @@ export default function Pricing() {
             onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-light)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
           >
-            Let&apos;s talk
+            {isID ? "Yuk diskusi" : "Let&apos;s talk"}
           </a>
         </motion.p>
 
@@ -346,3 +396,6 @@ export default function Pricing() {
     </section>
   );
 }
+
+
+

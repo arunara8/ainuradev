@@ -2,18 +2,21 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-
-const navLinks = [
-  { label: "SERVICES", href: "#services" },
-  { label: "WORK", href: "#work" },
-  { label: "PRICING", href: "#pricing" },
-  { label: "FAQ", href: "#faq" },
-];
+import { useLanguage } from "./LanguageProvider";
 
 export default function Navbar() {
+  const { locale, setLocale } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const isID = locale === "id";
+
+  const navLinks = [
+    { label: isID ? "LAYANAN" : "SERVICES", href: "#services" },
+    { label: isID ? "KARYA" : "WORK", href: "#work" },
+    { label: isID ? "HARGA" : "PRICING", href: "#pricing" },
+    { label: "FAQ", href: "#faq" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -99,6 +102,32 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-1.5 md:gap-2">
+            <div
+              className="hidden md:flex items-center rounded-xl border overflow-hidden"
+              style={{ borderColor: "var(--border)" }}
+            >
+              <button
+                onClick={() => setLocale("en")}
+                className="px-2.5 py-1.5 text-[11px] font-bold tracking-widest transition-colors"
+                style={{
+                  color: locale === "en" ? "#fff" : "var(--text-muted)",
+                  background: locale === "en" ? "var(--accent)" : "transparent",
+                }}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLocale("id")}
+                className="px-2.5 py-1.5 text-[11px] font-bold tracking-widest transition-colors"
+                style={{
+                  color: locale === "id" ? "#fff" : "var(--text-muted)",
+                  background: locale === "id" ? "var(--accent)" : "transparent",
+                }}
+              >
+                ID
+              </button>
+            </div>
+
             {/* Moon / Sun toggle */}
             <button
               onClick={() => setIsDark(!isDark)}
@@ -134,7 +163,7 @@ export default function Navbar() {
                 boxShadow: "0 0 20px var(--accent-glow)",
               }}
             >
-              CONTACT
+              {isID ? "KONTAK" : "CONTACT"}
             </a>
 
             {/* Hamburger - mobile only */}
@@ -183,6 +212,31 @@ export default function Navbar() {
           backdropFilter: "blur(40px)",
         }}
       >
+        <div
+          className="flex items-center justify-center gap-2 px-2 pb-2"
+        >
+          <button
+            onClick={() => setLocale("en")}
+            className="px-3 py-2 rounded-xl text-xs font-bold tracking-widest"
+            style={{
+              background: locale === "en" ? "var(--accent)" : "var(--surface)",
+              color: locale === "en" ? "#fff" : "var(--text-muted)",
+            }}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLocale("id")}
+            className="px-3 py-2 rounded-xl text-xs font-bold tracking-widest"
+            style={{
+              background: locale === "id" ? "var(--accent)" : "var(--surface)",
+              color: locale === "id" ? "#fff" : "var(--text-muted)",
+            }}
+          >
+            ID
+          </button>
+        </div>
+
         {navLinks.map((link, i) => (
           <a
             key={link.label}
@@ -211,7 +265,7 @@ export default function Navbar() {
           className="flex items-center justify-center gap-2 mx-1 py-3 rounded-xl text-sm font-bold tracking-widest text-white"
           style={{ background: "var(--accent)" }}
         >
-          CONTACT -&gt;
+          {isID ? "KONTAK -&gt;" : "CONTACT -&gt;"}
         </a>
       </div>
     </>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "./components/LanguageProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,9 +36,9 @@ export default function RootLayout({
         </div>
 
         {/* ── Content ── */}
-        <div className="relative z-10">
-          {children}
-        </div>
+        <LanguageProvider>
+          <div className="relative z-10">{children}</div>
+        </LanguageProvider>
       </body>
     </html>
   );

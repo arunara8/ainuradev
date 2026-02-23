@@ -8,6 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import { useLanguage } from "./LanguageProvider";
 
 // ─── Marquee brand text di background ───────────────
 function BrandMarquee() {
@@ -38,20 +39,21 @@ function BrandMarquee() {
 }
 
 // ─── Tilt Card ───────────────────────────────────────
-function TiltCard() {
+function TiltCard({ isID }: { isID: boolean }) {
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
   const clamp = (value: number, min: number, max: number) =>
     Math.min(max, Math.max(min, value));
 
-  const springConfig = { stiffness: 60, damping: 18, mass: 0.8 };
+  const springConfig = { stiffness: 95, damping: 16, mass: 0.7 };
   const springX = useSpring(rawX, springConfig);
   const springY = useSpring(rawY, springConfig);
 
-  const rotateY   = useTransform(springX, [-1, 1], [-12, 12]);
-  const rotateX   = useTransform(springY, [-1, 1], [8, -8]);
-  const translateX = useTransform(springX, [-1, 1], [-16, 16]);
-  const translateY = useTransform(springY, [-1, 1], [-8, 8]);
+  // Gerak lebih bebas tapi tetap dibatasi
+  const rotateY = useTransform(springX, [-1, 1], [-14, 14]);
+  const rotateX = useTransform(springY, [-1, 1], [10, -10]);
+  const translateX = useTransform(springX, [-1, 1], [-120, 120]);
+  const translateY = useTransform(springY, [-1, 1], [-60, 60]);
 
   const glareX = useTransform(springX, [-1, 1], [0, 100]);
   const glareY = useTransform(springY, [-1, 1], [0, 100]);
@@ -67,15 +69,15 @@ function TiltCard() {
     if (isCoarsePointer) {
       const onOrientation = (e: DeviceOrientationEvent) => {
         if (e.gamma == null) return;
-        // Mobile: geser kiri-kanan mengikuti gerakan HP
-        rawX.set(clamp(e.gamma / 22, -1, 1));
-        if (e.beta != null) rawY.set(clamp((e.beta - 45) / 35, -1, 1));
+        // Mobile: gerak kiri-kanan lebih kerasa saat HP digerakkan
+        rawX.set(clamp(e.gamma / 12, -1, 1));
+        if (e.beta != null) rawY.set(clamp((e.beta - 45) / 22, -1, 1));
       };
 
       const onMotion = (e: DeviceMotionEvent) => {
         if (!e.accelerationIncludingGravity) return;
         const ax = e.accelerationIncludingGravity.x ?? 0;
-        rawX.set(clamp(ax / 6, -1, 1));
+        rawX.set(clamp(ax / 3.2, -1, 1));
       };
 
       window.addEventListener("deviceorientation", onOrientation, true);
@@ -90,8 +92,11 @@ function TiltCard() {
     }
 
     const onMove = (e: MouseEvent) => {
-      rawX.set((e.clientX / window.innerWidth) * 2 - 1);
-      rawY.set((e.clientY / window.innerHeight) * 2 - 1);
+      // Map posisi pointer ke ruang -1..1 lalu boost supaya card benar-benar move
+      const nx = clamp((e.clientX / window.innerWidth) * 2 - 1, -1, 1);
+      const ny = clamp((e.clientY / window.innerHeight) * 2 - 1, -1, 1);
+      rawX.set(clamp(nx * 1.2, -1, 1));
+      rawY.set(clamp(ny * 1.1, -1, 1));
     };
     const onLeave = () => {
       rawX.set(0);
@@ -162,9 +167,9 @@ function TiltCard() {
             className="text-center text-[10px] tracking-[0.12em] uppercase font-medium"
             style={{ color: "rgba(255,255,255,0.5)" }}
           >
-            Designing Quiet, Confident
+            {isID ? "Merancang Pengalaman" : "Designing Quiet, Confident"}
             <br />
-            Digital Experiences
+            {isID ? "Digital yang Tenang" : "Digital Experiences"}
           </p>
         </div>
 
@@ -186,6 +191,8 @@ function TiltCard() {
 
 // ─── Hero ─────────────────────────────────────────────
 export default function Hero() {
+  const { locale } = useLanguage();
+  const isID = locale === "id";
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
 
@@ -226,7 +233,7 @@ export default function Hero() {
 
       {/* Tilt card */}
       <div className="relative z-20" style={{ perspective: "1000px" }}>
-        <TiltCard />
+        <TiltCard isID={isID} />
       </div>
 
     </section>

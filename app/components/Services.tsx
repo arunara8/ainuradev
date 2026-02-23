@@ -2,6 +2,7 @@
 
 import { useRef, type CSSProperties, type ReactNode } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLanguage } from "./LanguageProvider";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -98,6 +99,34 @@ function RevealText({
 }
 
 export default function Services() {
+  const { locale } = useLanguage();
+  const isID = locale === "id";
+  const idCopy = [
+    {
+      title: "Desain Website",
+      description:
+        "Saya merancang website modern dan minimalis yang menyeimbangkan estetika dengan kemudahan penggunaan.",
+      tags: ["Figma", "Webflow", "Framer"],
+    },
+    {
+      title: "Pengembangan Web",
+      description:
+        "Saya membangun web app full-stack dengan Next.js, React, dan Node.js yang cepat, aksesibel, dan scalable.",
+      tags: ["Next.js", "React", "Node.js"],
+    },
+    {
+      title: "Desain UI/UX",
+      description:
+        "Saya memetakan user journey dan merancang interface yang intuitif agar pengalaman terasa natural sejak klik pertama.",
+      tags: ["Riset", "Wireframe", "Prototype"],
+    },
+    {
+      title: "SEO & Performa",
+      description:
+        "Saya optimasi Core Web Vitals, semantic HTML, dan visibilitas search agar website cepat, mudah ditemukan, dan konversinya bagus.",
+      tags: ["Core Web Vitals", "Analytics", "Lighthouse"],
+    },
+  ];
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -122,7 +151,7 @@ export default function Services() {
             className="text-[clamp(32px,8vw,72px)] font-black tracking-tighter leading-none"
             style={{ color: "var(--text)" } as React.CSSProperties}
           >
-            What I can{" "}
+            {isID ? "Apa yang bisa saya " : "What I can "}
             <em
               style={{
                 fontFamily: "Georgia, serif",
@@ -131,9 +160,9 @@ export default function Services() {
                 color: "var(--text-muted)",
               }}
             >
-              help
+              {isID ? "bantu" : "help"}
             </em>{" "}
-            with.
+            {isID ? "kerjakan." : "with."}
           </RevealText>
         </div>
 
@@ -221,7 +250,7 @@ export default function Services() {
 
                       {/* Tags */}
                       <div className="hidden sm:flex items-center gap-2">
-                        {service.tags.map((tag) => (
+                        {service.tags.map((tag, tagIndex) => (
                           <span
                             key={tag}
                             className="text-[10px] tracking-widest uppercase px-3 py-1 rounded-full"
@@ -231,7 +260,7 @@ export default function Services() {
                               color: service.accent,
                             }}
                           >
-                            {tag}
+                            {isID ? idCopy[i].tags[tagIndex] : tag}
                           </span>
                         ))}
                       </div>
@@ -242,7 +271,7 @@ export default function Services() {
                       className="text-2xl md:text-3xl font-bold tracking-tight mb-4"
                       style={{ color: "var(--text)" }}
                     >
-                      {service.title}
+                      {isID ? idCopy[i].title : service.title}
                     </h3>
 
                     {/* Divider */}
@@ -256,14 +285,14 @@ export default function Services() {
                       className="text-sm md:text-base leading-relaxed max-w-lg"
                       style={{ color: "var(--text-muted)" }}
                     >
-                      {service.description}
+                      {isID ? idCopy[i].description : service.description}
                     </p>
 
                     {/* Bottom row */}
                     <div className="flex items-center justify-between mt-8">
                       {/* Mobile tags */}
                       <div className="flex sm:hidden items-center gap-2 flex-wrap">
-                        {service.tags.map((tag) => (
+                        {service.tags.map((tag, tagIndex) => (
                           <span
                             key={tag}
                             className="text-[10px] tracking-widest uppercase px-2.5 py-1 rounded-full"
@@ -273,7 +302,7 @@ export default function Services() {
                               color: service.accent,
                             }}
                           >
-                            {tag}
+                            {isID ? idCopy[i].tags[tagIndex] : tag}
                           </span>
                         ))}
                       </div>
@@ -284,7 +313,7 @@ export default function Services() {
                         className="ml-auto flex items-center gap-2 text-xs tracking-widest uppercase transition-all duration-200 hover:gap-3"
                         style={{ color: service.accent }}
                       >
-                        Get started
+                        {isID ? "Mulai sekarang" : "Get started"}
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M7 17L17 7M17 7H7M17 7v10"/>
                         </svg>

@@ -1,14 +1,15 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useLanguage } from "./LanguageProvider";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const faqs = [
   {
     q: "What's your typical project timeline?",
-    a: "Landing pages usually take 5–7 days. Full-stack projects run in weekly sprints — scope and complexity determine the total duration. I'll give you a clear estimate before we start.",
+    a: "Landing pages usually take 5â€“7 days. Full-stack projects run in weekly sprints â€” scope and complexity determine the total duration. I'll give you a clear estimate before we start.",
   },
   {
     q: "Do you work with international clients?",
@@ -24,7 +25,7 @@ const faqs = [
   },
   {
     q: "Do you offer ongoing maintenance?",
-    a: "Yes — Custom plan clients get ongoing support. For other plans, maintenance can be arranged as a separate retainer. Just reach out and we'll figure out what makes sense.",
+    a: "Yes â€” Custom plan clients get ongoing support. For other plans, maintenance can be arranged as a separate retainer. Just reach out and we'll figure out what makes sense.",
   },
   {
     q: "What technologies do you work with?",
@@ -33,6 +34,36 @@ const faqs = [
   {
     q: "How do payments work?",
     a: "50% upfront, 50% on delivery for one-time projects. Weekly sprints are billed at the start of each week. I accept bank transfer, PayPal, or Wise.",
+  },
+];
+const faqsID = [
+  {
+    q: "Berapa lama timeline project biasanya?",
+    a: "Landing page biasanya 5-7 hari. Untuk full-stack, dikerjakan per sprint mingguan sesuai scope dan kompleksitas.",
+  },
+  {
+    q: "Apakah kamu menerima klien internasional?",
+    a: "Ya, saya kerja remote dan nyaman async lintas zona waktu.",
+  },
+  {
+    q: "Apa yang kamu butuhkan untuk mulai?",
+    a: "Brief singkat project, tujuan, dan referensi. Dari situ saya susun proposal timeline serta biaya.",
+  },
+  {
+    q: "Bisa revisi setelah delivery?",
+    a: "Paket Starter termasuk 1x revisi. Paket Premium revisi tanpa batas selama sprint berjalan.",
+  },
+  {
+    q: "Apakah ada maintenance berkelanjutan?",
+    a: "Ada. Untuk plan Custom tersedia support ongoing. Plan lain bisa ditambah retainer maintenance.",
+  },
+  {
+    q: "Teknologi apa yang kamu pakai?",
+    a: "Stack utama saya Next.js, React, TypeScript, Tailwind CSS, Node.js, dan PostgreSQL.",
+  },
+  {
+    q: "Sistem pembayarannya bagaimana?",
+    a: "50% di awal, 50% saat selesai untuk project one-time. Sprint dibayar di awal tiap minggu.",
   },
 ];
 
@@ -59,7 +90,7 @@ function FAQItem({
         boxShadow: isOpen ? "0 0 40px rgba(124,106,255,0.08)" : "none",
       }}
     >
-      {/* Accent line — muncul saat open */}
+      {/* Accent line â€” muncul saat open */}
       <div
         className="absolute top-0 left-8 right-8 h-px transition-opacity duration-300"
         style={{
@@ -155,6 +186,9 @@ function RevealText({
 }
 
 export default function FAQ() {
+  const { locale } = useLanguage();
+  const isID = locale === "id";
+  const shownFaqs = isID ? faqsID : faqs;
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -165,7 +199,7 @@ export default function FAQ() {
     <section id="faq" ref={sectionRef} className="relative px-6 pt-32 pb-32">
       <div className="max-w-3xl mx-auto w-full">
 
-        {/* ── Label ── */}
+        {/* â”€â”€ Label â”€â”€ */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -175,7 +209,7 @@ export default function FAQ() {
         >
         </motion.p>
 
-        {/* ── Heading ── */}
+        {/* â”€â”€ Heading â”€â”€ */}
         <div className="mb-16">
           <RevealText delay={0.1}>
             <span
@@ -197,10 +231,10 @@ export default function FAQ() {
           </RevealText>
         </div>
 
-        {/* ── FAQ List ── */}
+        {/* â”€â”€ FAQ List â”€â”€ */}
         {inView && (
           <div className="flex flex-col gap-3">
-            {faqs.map((faq, i) => (
+          {shownFaqs.map((faq, i) => (
               <FAQItem
                 key={i}
                 faq={faq}
@@ -212,7 +246,7 @@ export default function FAQ() {
           </div>
         )}
 
-        {/* ── Bottom CTA ── */}
+        {/* â”€â”€ Bottom CTA â”€â”€ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -239,7 +273,7 @@ export default function FAQ() {
               boxShadow: "0 0 24px var(--accent-glow)",
             }}
           >
-            Ask me directly ↗
+            {isID ? "Tanya langsung" : "Ask me directly"} â†—
           </a>
         </motion.div>
 
@@ -247,3 +281,6 @@ export default function FAQ() {
     </section>
   );
 }
+
+
+

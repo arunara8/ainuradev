@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLanguage } from "./LanguageProvider";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -72,6 +73,8 @@ function RevealText({
 }
 
 export default function Contact() {
+  const { locale } = useLanguage();
+  const isID = locale === "id";
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -81,7 +84,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
-    // Simulasi kirim — ganti dengan API call lo (Resend, EmailJS, dsb)
+    // Simulasi kirim â€” ganti dengan API call lo (Resend, EmailJS, dsb)
     await new Promise((r) => setTimeout(r, 1500));
     setStatus("sent");
   };
@@ -90,7 +93,7 @@ export default function Contact() {
     <section id="contact" ref={sectionRef} className="relative px-6 pt-32 pb-24">
       <div className="max-w-5xl mx-auto w-full">
 
-        {/* ── Label ── */}
+        {/* â”€â”€ Label â”€â”€ */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -100,7 +103,7 @@ export default function Contact() {
         >
         </motion.p>
 
-        {/* ── Big heading ── */}
+        {/* â”€â”€ Big heading â”€â”€ */}
         <div className="mb-16">
           <RevealText delay={0.1}>
             <span
@@ -118,15 +121,15 @@ export default function Contact() {
               >
                 work
               </em>{" "}
-              together.
+              {isID ? "bareng." : "together."}
             </span>
           </RevealText>
         </div>
 
-        {/* ── Two column layout ── */}
+        {/* â”€â”€ Two column layout â”€â”€ */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {/* ── Left: Form ── */}
+          {/* â”€â”€ Left: Form â”€â”€ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -149,7 +152,7 @@ export default function Contact() {
             />
 
             {status === "sent" ? (
-              // ── Success state ──
+              // â”€â”€ Success state â”€â”€
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -167,24 +170,24 @@ export default function Contact() {
                   </svg>
                 </div>
                 <p className="text-lg font-bold" style={{ color: "var(--text)" }}>
-                  Message sent!
+                  {isID ? "Pesan terkirim!" : "Message sent!"}
                 </p>
                 <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  I&apos;ll get back to you within 24 hours.
+                  {isID ? "Saya akan balas dalam 24 jam." : "I&apos;ll get back to you within 24 hours."}
                 </p>
                 <button
                   onClick={() => { setStatus("idle"); setForm({ name: "", email: "", message: "" }); }}
                   className="mt-2 text-xs underline underline-offset-4 transition-colors"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  Send another
+                  {isID ? "Kirim lagi" : "Send another"}
                 </button>
               </motion.div>
             ) : (
-              // ── Form ──
+              // â”€â”€ Form â”€â”€
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <p className="text-base font-semibold mb-2" style={{ color: "var(--text)" }}>
-                  Send a message
+                  {isID ? "Kirim pesan" : "Send a message"}
                 </p>
 
                 {/* Name */}
@@ -197,7 +200,7 @@ export default function Contact() {
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="Your name"
+                    placeholder={isID ? "Nama kamu" : "Your name"}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200"
                     style={{
                       background: "rgba(255,255,255,0.04)",
@@ -225,7 +228,7 @@ export default function Contact() {
                     required
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    placeholder="your@email.com"
+                    placeholder={isID ? "kamu@email.com" : "your@email.com"}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200"
                     style={{
                       background: "rgba(255,255,255,0.04)",
@@ -253,7 +256,7 @@ export default function Contact() {
                     rows={4}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    placeholder="Tell me about your project..."
+                    placeholder={isID ? "Ceritakan project kamu..." : "Tell me about your project..."}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none transition-all duration-200"
                     style={{
                       background: "rgba(255,255,255,0.04)",
@@ -288,11 +291,11 @@ export default function Contact() {
                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                       />
-                      Sending...
+                      {isID ? "Mengirim..." : "Sending..."}
                     </>
                   ) : (
                     <>
-                      Send Message
+                      {isID ? "Kirim Pesan" : "Send Message"}
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M7 17L17 7M17 7H7M17 7v10" />
                       </svg>
@@ -303,7 +306,7 @@ export default function Contact() {
             )}
           </motion.div>
 
-          {/* ── Right: Info + Socials ── */}
+          {/* â”€â”€ Right: Info + Socials â”€â”€ */}
           <div className="flex flex-col gap-4">
 
             {/* Info card */}
@@ -334,19 +337,19 @@ export default function Contact() {
                   }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Available for projects
+                  {isID ? "Siap untuk project baru" : "Available for projects"}
                 </div>
                 <h3
                   className="text-xl font-bold mb-2"
                   style={{ color: "var(--text)" }}
                 >
-                  Ready to start something?
+                  {isID ? "Siap mulai sesuatu?" : "Ready to start something?"}
                 </h3>
                 <p
                   className="text-sm leading-relaxed"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  Whether it&apos;s a landing page or a full product — I&apos;m open to new projects. Response time is usually within 24 hours.
+                  {isID ? "Mau landing page atau full product, saya terbuka untuk project baru. Biasanya dibalas dalam 24 jam." : "Whether it&apos;s a landing page or a full product â€” I&apos;m open to new projects. Response time is usually within 24 hours."}
                 </p>
               </div>
             </motion.div>
@@ -368,7 +371,7 @@ export default function Contact() {
                 className="text-xs tracking-widest uppercase mb-4"
                 style={{ color: "var(--text-muted)" }}
               >
-                Find me on
+                {isID ? "Temukan saya di" : "Find me on"}
               </p>
               <div className="flex flex-col gap-3">
                 {socials.map((s, i) => (
@@ -418,7 +421,7 @@ export default function Contact() {
                     <svg
                       width="12" height="12" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                      style={{ color: "var(--text-subtle)" }}
+                      style={{ color: "var(--text-muted)" }}
                     >
                       <path d="M7 17L17 7M17 7H7M17 7v10" />
                     </svg>
@@ -430,22 +433,26 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* ── Footer ── */}
+      {/* â”€â”€ Footer â”€â”€ */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8, delay: 0.7 }}
         className="max-w-5xl mx-auto mt-20 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+        style={{ borderTop: "1px solid var(--border)" }}
       >
-        <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
-          © {new Date().getFullYear()} Ainura. All rights reserved.
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+          (c) {new Date().getFullYear()} Ainura. {isID ? "Semua hak dilindungi." : "All rights reserved."}
         </p>
-        <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
-          Built with Next.js · Tailwind CSS · Framer Motion
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+          {isID ? "Dibuat dengan Next.js · Tailwind CSS · Framer Motion" : "Built with Next.js · Tailwind CSS · Framer Motion"}
         </p>
       </motion.div>
 
     </section>
   );
 }
+
+
+
+
